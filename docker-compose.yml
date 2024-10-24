@@ -1,0 +1,31 @@
+version: '3'
+services:
+  simon-game:
+    build: ./frontend   # Path to the folder containing Dockerfile for the Simon Game
+    container_name: simon_game
+    ports:
+      - "8080:80"       # Exposes the Simon game on port 8080
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend    # Path to the folder containing Dockerfile for the Node.js backend
+    container_name: backend_server
+    ports:
+      - "3000:3000"     # Exposes the backend on port 3000
+    depends_on:
+      - redis           # (Optional) If you have Redis or another service
+    networks:
+      - app-network
+
+  redis:
+    image: "redis:alpine"
+    container_name: redis_server
+    ports:
+      - "6379:6379"     # Exposes Redis on port 6379
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
